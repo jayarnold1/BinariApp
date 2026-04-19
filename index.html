@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Binari Code Studio - by Creovizion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* --- semua CSS tetap persis seperti aslinya --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(45, 212, 191, 0.15), transparent 70%);
+            pointer-events: none;
+        }
+        .glass-container {
+            max-width: 1500px;
+            width: 100%;
+            background: rgba(10, 20, 35, 0.55);
+            backdrop-filter: blur(16px);
+            border-radius: 2rem;
+            border: 1px solid rgba(45, 212, 191, 0.25);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255,255,255,0.08);
+            padding: 1.8rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 1.8rem;
+            border-bottom: 1px solid rgba(45, 212, 191, 0.3);
+            padding-bottom: 1rem;
+        }
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF, #2dd4bf, #60a5fa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+        }
+        .badge {
+            background: rgba(45, 212, 191, 0.15);
+            border-radius: 40px;
+            padding: 0.4rem 1.2rem;
+            backdrop-filter: blur(4px);
+            color: #2dd4bf;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(45, 212, 191, 0.3);
+        }
+        .api-key-section {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            justify-content: space-between;
+            border: 1px solid rgba(45, 212, 191, 0.2);
+        }
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 40px;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(0,0,0,0.4);
+            padding: 0.3rem 1rem;
+            border-radius: 60px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .lang-selector label {
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+        select {
+            background: rgba(10, 20, 35, 0.95);
+            border: 1px solid rgba(45, 212, 191, 0.4);
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            transition: 0.2s;
+        }
+        select:hover {
+            border-color: #2dd4bf;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .btn {
+            border: none;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+            padding: 0.6rem 1.3rem;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.25s;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .btn-primary {
+            background: linear-gradient(105deg, #2dd4bf, #3b82f6);
+            border: none;
+            box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(105deg, #14b8a6, #2563eb);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .btn:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        .editor-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .code-panel, .output-panel {
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            border: 1px solid rgba(45, 212, 191, 0.2);
+        }
+        .code-panel { flex: 1.5; min-width: 300px; }
+        .output-panel { flex: 1; min-width: 280px; display: flex; flex-direction: column; }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            color: #cbd5e6;
+            font-weight: 600;
+            border-left: 3px solid #2dd4bf;
+            padding-left: 0.8rem;
+        }
+        textarea {
+            width: 100%;
+            height: 450px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            border-radius: 1rem;
+            color: #e2e8f0;
+            font-family: 'Courier New', 'Fira Code', 'Monaco', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            padding: 1rem;
+            resize: vertical;
+            outline: none;
+        }
+        textarea:focus {
+            border-color: #2dd4bf;
+            box-shadow: 0 0 10px rgba(45, 212, 191, 0.2);
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 1rem;
+            padding: 1rem;
+            overflow: auto;
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #cbd5e6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            min-height: 350px;
+            max-height: 450px;
+            border: 1px solid rgba(45, 212, 191, 0.2);
+        }
+        .stdin-section {
+            margin-top: 0.8rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .stdin-section textarea {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(45, 212, 191, 0.3);
+            border-radius: 1rem;
+            padding: 0.6rem 1rem;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
+            font-family: 'Courier New', monospace;
+            height: auto;
+            resize: vertical;
+            min-height: 70px;
+        }
+        .status {
+            font-size: 0.75rem;
+            margin-top: 0.8rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top: 2px solid #2dd4bf;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.35);
+        }
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: #2dd4bf;
+            cursor: pointer;
+            margin-left: auto;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            transition: 0.2s;
+        }
+        .copy-btn:hover {
+            background: rgba(45, 212, 191, 0.2);
+        }
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .info-text {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+        .version-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+        .version-selector select {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+        }
+        @media (max-width: 760px) {
+            body { padding: 1rem; }
+            .glass-container { padding: 1rem; }
+            textarea { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-container">
+    <div class="header">
+        <div class="logo">
+            <h1><i class="fas fa-code"></i> Binari Code Studio</h1>
+            <p>created by : @jay_lingga.dev</p>
+        </div>
+        <div class="badge">
+            <i class="fas fa-cloud-upload-alt"></i> OneCompiler • Real-time Execution • 15+ Languages
+        </div>
+    </div>
+
+    <div class="api-key-section">
+        <div class="api-status" id="apiStatus">
+            <i class="fas fa-circle" style="color: #22c55e; font-size: 0.6rem;"></i>
+            <span style="color: #80c1e6;">Backend Proxy Active</span>
+        </div>
+        <div class="api-status">
+            <i class="fas fa-chart-line"></i>
+            <span id="creditInfo">OneCompiler via Proxy</span>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <div class="lang-selector">
+                <label><i class="fas fa-globe"></i> Language</label>
+                <select id="languageSelect">
+                    <option value="python3">🐍 Python 3</option>
+                    <option value="python2">🐍 Python 2</option>
+                    <option value="nodejs">🟨 Node.js (JavaScript)</option>
+                    <option value="javascript">📜 JavaScript (Rhino)</option>
+                    <option value="c">⚙️ C (GCC)</option>
+                    <option value="cpp">⚡ C++ (GCC)</option>
+                    <option value="csharp">🎯 C# (.NET)</option>
+                    <option value="java">☕ Java</option>
+                    <option value="php">🐘 PHP</option>
+                    <option value="ruby">💎 Ruby</option>
+                    <option value="go">🐹 Go</option>
+                    <option value="rust">🦀 Rust</option>
+                    <option value="swift">🐦 Swift</option>
+                    <option value="kotlin">📱 Kotlin</option>
+                    <option value="scala">🔥 Scala</option>
+                    <option value="perl">🐪 Perl</option>
+                    <option value="r">📊 R</option>
+                </select>
+            </div>
+            <div class="version-selector" id="versionSelector" style="display: none;">
+                <label style="color: white;"><i class="fas fa-tag"></i><span style="color: #d1dbe1;"> Version </span></label>
+                <select id="versionSelect"></select>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button class="btn" id="clearBtn"><i class="fas fa-eraser"></i> Clear</button>
+            <button class="btn" id="resetTemplateBtn"><i class="fas fa-code-branch"></i> Reset Template</button>
+            <button class="btn btn-primary" id="runBtn"><i class="fas fa-play"></i> Run Code</button>
+        </div>
+    </div>
+
+    <div class="editor-area">
+        <div class="code-panel">
+            <div class="panel-header">
+                <i class="fas fa-file-code"></i> Code Editor
+                <span style="font-size:11px; margin-left:auto;" id="langIndicator">Python 3</span>
+            </div>
+            <textarea id="codeEditor" spellcheck="false"># Binari Code Studio - Jay Arnold Lingga
+# Selamat datang di compiler online!
+
+print("✨ Halo! Selamat datang di Binari Code Studio")
+print("🚀 Menggunakan Jay Arnold Lingga")
+
+# Contoh mengambil input
+try:
+    nama = input("Masukkan nama Anda: ")
+    print(f"Halo, {nama}!")
+except EOFError:
+    print("(Tidak ada input yang diberikan)")
+
+# Contoh perhitungan
+print("\n📊 Menghitung jumlah bilangan:")
+angka = [1, 2, 3, 4, 5]
+total = sum(angka)
+print(f"Jumlah 1+2+3+4+5 = {total}")
+
+# Loop sederhana
+print("\n🔄 Perulangan:")
+for i in range(1, 4):
+    print(f"  Iterasi ke-{i}")
+
+print("\n✅ Eksekusi selesai!")</textarea>
+            <div class="stdin-section">
+                <i class="fas fa-keyboard" style="color: #2dd4bf; margin-top: 8px;"></i>
+                <textarea id="stdinInput" placeholder="Masukkan input di sini (satu per baris)&#10;Contoh:&#10;John Doe&#10;25" spellcheck="false"></textarea>
+               <span class="info-text">↳ Input untuk program (input() / readline)</span>
+            </div>
+        </div>
+        <div class="output-panel">
+            <div class="output-header">
+                <div class="panel-header" style="border-left-color: #f97316;">
+                    <i class="fas fa-terminal"></i> Output
+                </div>
+                <button id="copyOutputBtn" class="copy-btn"><i class="far fa-copy"></i> Salin</button>
+            </div>
+            <pre id="outputArea">// Klik RUN untuk menjalankan kode
+// Output akan muncul di sini</pre>
+            <div class="status" id="statusMsg">
+                <i class="fas fa-circle-info"></i> Siap menjalankan kode...
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <i class="fas fa-shield-alt"></i> Jay Arnold Lingga • Python • JavaScript • C • C++ • C# • Java • PHP • Ruby • Go • Rust • Swift • Kotlin • Scala • Perl • R
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // FRONTEND - Mengirim request ke BACKEND PROXY (localhost:3000)
+    // ============================================================
+    
+    const BACKEND_URL = "http://localhost:3000/run";
+    
+    // Mapping bahasa UI -> OneCompiler language id
+    const languageMapping = {
+        python3: "python",
+        python2: "python2",
+        nodejs: "nodejs",
+        javascript: "javascript",
+        c: "c",
+        cpp: "cpp",
+        csharp: "csharp",
+        java: "java",
+        php: "php",
+        ruby: "ruby",
+        go: "go",
+        rust: "rust",
+        swift: "swift",
+        kotlin: "kotlin",
+        scala: "scala",
+        perl: "perl",
+        r: "r"
+    };
+    
+    function getFileName(language) {
+        const map = {
+            python3: "main.py",
+            python2: "main.py",
+            nodejs: "main.js",
+            javascript: "main.js",
+            c: "main.c",
+            cpp: "main.cpp",
+            csharp: "main.cs",
+            java: "Main.java",
+            php: "main.php",
+            ruby: "main.rb",
+            go: "main.go",
+            rust: "main.rs",
+            swift: "main.swift",
+            kotlin: "main.kt",
+            scala: "main.scala",
+            perl: "main.pl",
+            r: "main.r"
+        };
+        return map[language] || "code.txt";
+    }
+    
+    const defaultCodes = {
+        python3: `# Python 3 - Binari Code Studio
+print("✨ Selamat datang di NexCode!")
+print("📊 Menghitung jumlah bilangan")
+
+# Mengambil input jika ada
+try:
+    nama = input("Masukkan nama Anda: ")
+    print(f"Halo, {nama}!")
+except EOFError:
+    print("(Input tidak diberikan, lanjutkan...)")
+
+# Perhitungan
+angka = [1, 2, 3, 4, 5]
+total = sum(angka)
+print(f"Jumlah 1+2+3+4+5 = {total}")
+
+# Loop
+print("\\nMenampilkan bilangan genap:")
+for i in range(1, 11):
+    if i % 2 == 0:
+        print(f"  {i} adalah genap")`,
+        python2: `# Python 2 - Binari Code Studio
+print "✨ Selamat datang di NexCode!"
+print "📊 Menghitung jumlah bilangan"
+
+# Mengambil input jika ada
+try:
+    nama = raw_input("Masukkan nama Anda: ")
+    print "Halo, {}!".format(nama)
+except EOFError:
+    print "(Input tidak diberikan, lanjutkan...)"
+
+# Perhitungan
+angka = [1, 2, 3, 4, 5]
+total = sum(angka)
+print "Jumlah 1+2+3+4+5 = {}".format(total)
+
+# Loop
+print "\\nMenampilkan bilangan genap:"
+for i in range(1, 11):
+    if i % 2 == 0:
+        print "  {} adalah genap".format(i)`,
+        nodejs: `// Node.js (JavaScript) - Binari Code Studio
+console.log("🚀 JavaScript dengan Jay Arnold Lingga");
+
+// Membaca input jika ada
+const readline = require('readline');
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+let inputReceived = false;
+rl.on('line', (input) => {
+    if (!inputReceived) {
+        console.log(\`Halo, \${input}!\`);
+        inputReceived = true;
+        rl.close();
+    }
+});
+
+setTimeout(() => {
+    if (!inputReceived) {
+        console.log("(Tidak ada input yang diberikan)");
+    }
+    console.log("\\n📊 Perhitungan:");
+    const angka = [10, 20, 30, 40];
+    const total = angka.reduce((a, b) => a + b, 0);
+    console.log(\`Total array: \${total}\`);
+    
+    console.log("\\n🔄 Menampilkan data:");
+    angka.forEach((item, index) => {
+        console.log(\`  Index \${index}: \${item}\`);
+    });
+    
+    console.log("\\n✅ Eksekusi selesai!");
+    if (!inputReceived) rl.close();
+}, 100);`,
+        javascript: `// JavaScript (Rhino) - Binari Code Studio
+print("🚀 JavaScript dengan Jay Arnold Lingga");
+
+print("\\n📊 Perhitungan:");
+var angka = [10, 20, 30, 40];
+var total = 0;
+for(var i = 0; i < angka.length; i++) {
+    total += angka[i];
+}
+print("Total array: " + total);
+
+print("\\n🔄 Menampilkan data:");
+for(var i = 0; i < angka.length; i++) {
+    print("  Index " + i + ": " + angka[i]);
+}
+
+print("\\n✅ Eksekusi selesai!");`,
+        c: `#include <stdio.h>
+#include <string.h>
+
+int main() {
+    printf("⚙️ C Language - Binari Code Studio\\n");
+    printf("Halo, Programmer C!\\n");
+    
+    char nama[100];
+    printf("Masukkan nama: ");
+    if (fgets(nama, sizeof(nama), stdin) != NULL) {
+        nama[strcspn(nama, "\\n")] = 0;
+        if (strlen(nama) > 0) {
+            printf("Halo, %s!\\n", nama);
+        } else {
+            printf("(Tidak ada input yang diberikan)\\n");
+        }
+    } else {
+        printf("(Tidak ada input yang diberikan)\\n");
+    }
+    
+    int a = 15, b = 27;
+    printf("\\n📊 Hasil %d + %d = %d\\n", a, b, a + b);
+    
+    printf("\\n🔄 Menampilkan 3 kali:\\n");
+    for(int i = 1; i <= 3; i++) {
+        printf("  Iterasi ke-%d\\n", i);
+    }
+    
+    return 0;
+}`,
+        cpp: `#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    cout << "⚡ C++ - Binari Code Studio" << endl;
+    cout << "Halo, C++ Developer!" << endl;
+    
+    string nama;
+    cout << "Masukkan nama: ";
+    if (getline(cin, nama) && !nama.empty()) {
+        cout << "Halo, " << nama << "!" << endl;
+    } else {
+        cout << "(Tidak ada input yang diberikan)" << endl;
+    }
+    
+    int angka[] = {5, 10, 15, 20};
+    int total = 0;
+    for(int i = 0; i < 4; i++) {
+        total += angka[i];
+    }
+    cout << "\\n📊 Total array: " << total << endl;
+    
+    cout << "\\n🔄 Menampilkan perulangan:" << endl;
+    for(int i = 1; i <= 3; i++) {
+        cout << "  Perulangan ke-" << i << endl;
+    }
+    
+    return 0;
+}`,
+        csharp: `using System;
+using System.Linq;
+
+class Program {
+    static void Main() {
+        Console.WriteLine("🎯 C# - Binari Code Studio");
+        Console.WriteLine("Halo, C# Developer!");
+        
+        Console.Write("Masukkan nama: ");
+        string nama = Console.ReadLine();
+        if (!string.IsNullOrEmpty(nama)) {
+            Console.WriteLine($"Halo, {nama}!");
+        } else {
+            Console.WriteLine("(Tidak ada input yang diberikan)");
+        }
+        
+        int[] angka = { 10, 20, 30, 40 };
+        int total = angka.Sum();
+        Console.WriteLine($"\\n📊 Total array: {total}");
+        
+        Console.WriteLine("\\n🔄 Menampilkan data:");
+        for(int i = 0; i < angka.Length; i++) {
+            Console.WriteLine($"  Index {i}: {angka[i]}");
+        }
+    }
+}`,
+        java: `import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("☕ Java - Binari Code Studio");
+        System.out.println("Halo, Java Programmer!");
+        
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Masukkan nama: ");
+        if (scanner.hasNextLine()) {
+            String nama = scanner.nextLine();
+            if (!nama.isEmpty()) {
+                System.out.println("Halo, " + nama + "!");
+            } else {
+                System.out.println("(Tidak ada input yang diberikan)");
+            }
+        } else {
+            System.out.println("(Tidak ada input yang diberikan)");
+        }
+        
+        int[] angka = {5, 10, 15, 20, 25};
+        int total = 0;
+        for(int num : angka) {
+            total += num;
+        }
+        System.out.println("\\n📊 Total array: " + total);
+        
+        System.out.println("\\n🔄 Menampilkan perulangan:");
+        for(int i = 1; i <= 3; i++) {
+            System.out.println("  Iterasi ke-" + i);
+        }
+        
+        scanner.close();
+    }
+}`,
+        php: `<?php
+// PHP - Binari Code Studio
+echo "🐘 PHP - Binari Code Studio\\n";
+echo "Halo, PHP Developer!\\n";
+
+$input = fopen('php://stdin', 'r');
+echo "Masukkan nama: ";
+$nama = trim(fgets($input));
+if (!empty($nama)) {
+    echo "Halo, $nama!\\n";
+} else {
+    echo "(Tidak ada input yang diberikan)\\n";
+}
+
+$angka = [10, 20, 30, 40, 50];
+$total = array_sum($angka);
+echo "\\n📊 Total array: $total\\n";
+
+echo "\\n🔄 Menampilkan data:\\n";
+foreach($angka as $index => $nilai) {
+    echo "  Index $index: $nilai\\n";
+}
+
+echo "\\n✅ Eksekusi selesai!\\n";
+fclose($input);
+?>`,
+        ruby: `# Ruby - Binari Code Studio
+puts "💎 Ruby - Binari Code Studio"
+puts "Halo, Ruby Developer!"
+
+print "Masukkan nama: "
+nama = gets.chomp
+if !nama.empty?
+  puts "Halo, #{nama}!"
+else
+  puts "(Tidak ada input yang diberikan)"
+end
+
+angka = [10, 20, 30, 40, 50]
+total = angka.sum
+puts "\n📊 Total array: #{total}"
+
+puts "\n🔄 Menampilkan data:"
+angka.each_with_index do |nilai, index|
+  puts "  Index #{index}: #{nilai}"
+end
+
+puts "\n✅ Eksekusi selesai!"`,
+        go: `package main
+
+import (
+    "bufio"
+    "fmt"
+    "os"
+    "strings"
+)
+
+func main() {
+    fmt.Println("🐹 Go - Binari Code Studio")
+    fmt.Println("Halo, Go Developer!")
+    
+    reader := bufio.NewReader(os.Stdin)
+    fmt.Print("Masukkan nama: ")
+    nama, _ := reader.ReadString('\\n')
+    nama = strings.TrimSpace(nama)
+    
+    if nama != "" {
+        fmt.Printf("Halo, %s!\\n", nama)
+    } else {
+        fmt.Println("(Tidak ada input yang diberikan)")
+    }
+    
+    angka := []int{10, 20, 30, 40, 50}
+    total := 0
+    for _, num := range angka {
+        total += num
+    }
+    fmt.Printf("\\n📊 Total array: %d\\n", total)
+    
+    fmt.Println("\\n🔄 Menampilkan data:")
+    for i, nilai := range angka {
+        fmt.Printf("  Index %d: %d\\n", i, nilai)
+    }
+    
+    fmt.Println("\\n✅ Eksekusi selesai!")
+}`,
+        rust: `// Rust - Binari Code Studio
+use std::io;
+
+fn main() {
+    println!("🦀 Rust - Binari Code Studio");
+    println!("Halo, Rust Developer!");
+    
+    let mut input = String::new();
+    println!("Masukkan nama: ");
+    io::stdin().read_line(&mut input).ok();
+    let nama = input.trim();
+    
+    if !nama.is_empty() {
+        println!("Halo, {}!", nama);
+    } else {
+        println!("(Tidak ada input yang diberikan)");
+    }
+    
+    let angka = vec![10, 20, 30, 40, 50];
+    let total: i32 = angka.iter().sum();
+    println!("\n📊 Total array: {}", total);
+    
+    println!("\n🔄 Menampilkan data:");
+    for (i, &nilai) in angka.iter().enumerate() {
+        println!("  Index {}: {}", i, nilai);
+    }
+    
+    println!("\n✅ Eksekusi selesai!");
+}`
+    };
+    
+    // DOM Elements
+    const languageSelect = document.getElementById('languageSelect');
+    const codeEditor = document.getElementById('codeEditor');
+    const runBtn = document.getElementById('runBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const resetTemplateBtn = document.getElementById('resetTemplateBtn');
+    const outputArea = document.getElementById('outputArea');
+    const statusMsg = document.getElementById('statusMsg');
+    const langIndicator = document.getElementById('langIndicator');
+    const copyOutputBtn = document.getElementById('copyOutputBtn');
+    const stdinInput = document.getElementById('stdinInput');
+    const creditInfo = document.getElementById('creditInfo');
+    const versionSelector = document.getElementById('versionSelector');
+    if(versionSelector) versionSelector.style.display = 'none';
+    
+    function updateLanguage() {
+        const lang = languageSelect.value;
+        const selectedText = languageSelect.options[languageSelect.selectedIndex].text;
+        langIndicator.innerText = selectedText.split(' ')[0];
+        if (defaultCodes[lang]) {
+            codeEditor.value = defaultCodes[lang];
+        } else {
+            codeEditor.value = `// ${selectedText} - Binari Code Studio\nconsole.log("Hello from ${selectedText}!");`;
+        }
+        statusMsg.innerHTML = `<i class="fas fa-sync-alt"></i> Template ${selectedText} dimuat`;
+        setTimeout(() => {
+            if(statusMsg.innerHTML.includes("Template")) 
+                statusMsg.innerHTML = `<i class="fas fa-circle-info"></i> Siap menjalankan kode...`;
+        }, 2000);
+    }
+    
+    languageSelect.addEventListener('change', updateLanguage);
+    
+    clearBtn.addEventListener('click', () => {
+        codeEditor.value = '';
+        statusMsg.innerHTML = `<i class="fas fa-eraser"></i> Editor dibersihkan`;
+        setTimeout(() => {
+            if(statusMsg.innerHTML.includes("dibersihkan"))
+                statusMsg.innerHTML = `<i class="fas fa-circle-info"></i> Siap menjalankan kode...`;
+        }, 1500);
+    });
+    
+    resetTemplateBtn.addEventListener('click', () => {
+        const lang = languageSelect.value;
+        if (defaultCodes[lang]) {
+            codeEditor.value = defaultCodes[lang];
+            statusMsg.innerHTML = `<i class="fas fa-code-branch"></i> Template ${languageSelect.options[languageSelect.selectedIndex].text} dimuat ulang`;
+        } else {
+            codeEditor.value = `// ${languageSelect.options[languageSelect.selectedIndex].text} - Binari Code Studio\nconsole.log("Hello World!");`;
+            statusMsg.innerHTML = `<i class="fas fa-code-branch"></i> Template reset`;
+        }
+        setTimeout(() => {
+            if(statusMsg.innerHTML.includes("dimuat ulang") || statusMsg.innerHTML.includes("reset"))
+                statusMsg.innerHTML = `<i class="fas fa-circle-info"></i> Siap menjalankan kode...`;
+        }, 1500);
+    });
+    
+    copyOutputBtn.addEventListener('click', async () => {
+        const text = outputArea.innerText;
+        try {
+            await navigator.clipboard.writeText(text);
+            statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Output disalin!`;
+            setTimeout(() => {
+                if(statusMsg.innerHTML.includes("disalin"))
+                    statusMsg.innerHTML = `<i class="fas fa-circle-info"></i> Siap menjalankan kode...`;
+            }, 1500);
+        } catch(err) {
+            statusMsg.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Gagal menyalin`;
+        }
+    });
+    
+    async function executeCode() {
+        const langUI = languageSelect.value;
+        const language = languageMapping[langUI];
+        if (!language) {
+            outputArea.innerText = "❌ Error: Bahasa tidak didukung";
+            statusMsg.innerHTML = `<i class="fas fa-exclamation-circle"></i> Bahasa tidak valid`;
+            return;
+        }
+        
+        const code = codeEditor.value;
+        const stdinValue = stdinInput.value;
+        if (!code.trim()) {
+            outputArea.innerText = "❌ Error: Kode tidak boleh kosong!";
+            statusMsg.innerHTML = `<i class="fas fa-exclamation-circle"></i> Kode kosong!`;
+            return;
+        }
+        
+        outputArea.innerText = "⏳ Mengirim ke backend proxy...\nMohon tunggu...";
+        statusMsg.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Mengeksekusi ${langUI.toUpperCase()}...`;
+        
+        const fileName = getFileName(langUI);
+        const payload = {
+            language: language,
+            stdin: stdinValue,
+            files: [{ name: fileName, content: code }]
+        };
+        
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 35000);
+            const response = await fetch(BACKEND_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            
+            const data = await response.json();
+            
+            if (data.status === "failed" || data.error) {
+                let errMsg = data.error || "Unknown error";
+                outputArea.innerText = `❌ API Error: ${errMsg}`;
+                statusMsg.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Gagal: ${errMsg.substring(0, 70)}`;
+                if (data.limitRemaining !== undefined) creditInfo.innerText = `Limit: ${data.limitRemaining} calls left`;
+                return;
+            }
+            
+            let output = "";
+            if (data.stdout) output += data.stdout;
+            if (data.stderr) {
+                if (output) output += "\n";
+                output += `[stderr]:\n${data.stderr}`;
+            }
+            if (data.exception) {
+                if (output) output += "\n";
+                output += `[Exception]: ${data.exception}`;
+            }
+            if (!output.trim()) output = "✅ Program selesai tanpa output.";
+            
+            if (data.executionTime !== undefined) output += `\n\n⏱️ Execution Time: ${data.executionTime} ms`;
+            if (data.memoryUsed !== undefined) output += `\n💾 Memory Used: ${data.memoryUsed} KB`;
+            
+            if (data.limitRemaining !== undefined) creditInfo.innerText = `Limit: ${data.limitRemaining} calls left`;
+            else creditInfo.innerText = `OneCompiler via Proxy`;
+            
+            outputArea.innerText = output;
+            statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Eksekusi selesai ${data.executionTime ? `(${data.executionTime}ms)` : ''}`;
+        } catch (err) {
+            console.error(err);
+            let errMsg = err.message;
+            if (err.name === "AbortError") errMsg = "Timeout: backend tidak merespon dalam 35 detik";
+            outputArea.innerText = `❌ Gagal mengeksekusi kode:\n${errMsg}\n\nPastikan backend sudah berjalan di http://localhost:3000\nJalankan: node server.js`;
+            statusMsg.innerHTML = `<i class="fas fa-bug"></i> Error: ${errMsg.substring(0, 80)}`;
+        }
+    }
+    
+    runBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        executeCode();
+    });
+    
+    codeEditor.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            executeCode();
+        }
+    });
+    
+    stdinInput.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            executeCode();
+        }
+    });
+    
+    // ============================================================
+    // TAMBAHAN: Auto-indentation untuk Python (tanpa mengubah kode asli)
+    // ============================================================
+    codeEditor.addEventListener('keydown', function(e) {
+        // Hanya aktif untuk Python 3 atau Python 2, dan bukan Ctrl+Enter (biarkan untuk run)
+        const lang = languageSelect.value;
+        if ((lang === 'python3' || lang === 'python2') && e.key === 'Enter' && !e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            const textarea = codeEditor;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const value = textarea.value;
+            
+            // Cari awal baris tempat kursor berada
+            let lineStart = value.lastIndexOf('\n', start - 1) + 1;
+            let currentLine = value.substring(lineStart, start);
+            
+            // Ambil indentasi baris saat ini (spasi/tab di awal)
+            let indentMatch = currentLine.match(/^[ \t]*/);
+            let currentIndent = indentMatch ? indentMatch[0] : '';
+            
+            // Cek apakah baris diakhiri dengan ':' (abaikan spasi di akhir)
+            let trimmedLine = currentLine.trimEnd();
+            let needsExtraIndent = trimmedLine.endsWith(':');
+            
+            // Tentukan indentasi untuk baris baru
+            let newIndent = currentIndent;
+            if (needsExtraIndent) {
+                newIndent += '    '; // 4 spasi (standar Python)
+            }
+            
+            // Sisipkan newline + indentasi
+            const newText = value.substring(0, start) + '\n' + newIndent + value.substring(end);
+            textarea.value = newText;
+            
+            // Letakkan kursor setelah indentasi
+            textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length;
+        }
+    });
+    
+    // Inisialisasi
+    codeEditor.value = defaultCodes.python3;
+    langIndicator.innerText = "Python 3";
+    statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Binari Code Studio | Backend proxy di localhost:3000 | Ctrl+Enter untuk run | Auto-indent untuk Python (setelah ':')`;
+    creditInfo.innerText = `Backend : localhost:3000`;
+</script>
+</body>
+</html>
