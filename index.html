@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* --- semua CSS tetap persis seperti aslinya --- */
+        /* Sama seperti sebelumnya, tidak ada perubahan styling */
         * {
             margin: 0;
             padding: 0;
@@ -228,22 +228,18 @@
             margin-top: 0.8rem;
             display: flex;
             gap: 0.8rem;
-            align-items: flex-start;
+            align-items: center;
             flex-wrap: wrap;
         }
-        .stdin-section textarea {
+        .stdin-section input {
             flex: 1;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(45, 212, 191, 0.3);
-            border-radius: 1rem;
-            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
             color: white;
             font-size: 0.85rem;
             outline: none;
-            font-family: 'Courier New', monospace;
-            height: auto;
-            resize: vertical;
-            min-height: 70px;
         }
         .status {
             font-size: 0.75rem;
@@ -319,18 +315,18 @@
             <p>created by : @jay_lingga.dev</p>
         </div>
         <div class="badge">
-            <i class="fas fa-cloud-upload-alt"></i> Compiler • Real-time Execution • 15+ Languages
+            <i class="fas fa-cloud-upload-alt"></i> Real-time Execution • 15+ Languages
         </div>
     </div>
 
     <div class="api-key-section">
         <div class="api-status" id="apiStatus">
             <i class="fas fa-circle" style="color: #22c55e; font-size: 0.6rem;"></i>
-            <span style="color: #80c1e6;">Status : Online</span>
+            <span style="color: #80c1e6;">Online</span>
         </div>
         <div class="api-status">
             <i class="fas fa-chart-line"></i>
-            <span id="creditInfo" style="color: white;">Ready!</span>
+            <span id="creditInfo">Credits: OneCompiler API</span>
         </div>
     </div>
 
@@ -377,34 +373,37 @@
                 <span style="font-size:11px; margin-left:auto;" id="langIndicator">Python 3</span>
             </div>
             <textarea id="codeEditor" spellcheck="false"># Binari Code Studio - Jay Arnold Lingga
-# Selamat datang di compiler online!
+# Menggunakan OneCompiler API
+
+import sys
 
 print("✨ Halo! Selamat datang di Binari Code Studio")
-print("🚀 by : Jay Arnold Lingga")
+print("🚀 Menggunakan Jay Arnold Lingga")
 
-# Contoh mengambil input
-try:
-    nama = input("Masukkan nama Anda: ")
+# Membaca input dengan sys.stdin
+print("Masukkan nama Anda: ", end="")
+nama = sys.stdin.readline().strip()
+if nama:
     print(f"Halo, {nama}!")
-except EOFError:
+else:
     print("(Tidak ada input yang diberikan)")
 
-# Contoh perhitungan
+# Perhitungan sederhana
 print("\n📊 Menghitung jumlah bilangan:")
 angka = [1, 2, 3, 4, 5]
 total = sum(angka)
 print(f"Jumlah 1+2+3+4+5 = {total}")
 
-# Loop sederhana
+# Loop
 print("\n🔄 Perulangan:")
 for i in range(1, 4):
     print(f"  Iterasi ke-{i}")
 
 print("\n✅ Eksekusi selesai!")</textarea>
             <div class="stdin-section">
-                <i class="fas fa-keyboard" style="color: #2dd4bf; margin-top: 8px;"></i>
-                <textarea id="stdinInput" placeholder="Masukkan input di sini (satu per baris)&#10;Contoh:&#10;John Doe&#10;25" spellcheck="false"></textarea>
-               <span class="info-text">↳ Input untuk program (input() / readline)</span>
+                <i class="fas fa-keyboard" style="color: #2dd4bf;"></i>
+                <input type="text" id="stdinInput" placeholder="Input STDIN (opsional)">
+                <span class="info-text">↳ akan dikirim ke program</span>
             </div>
         </div>
         <div class="output-panel">
@@ -414,116 +413,67 @@ print("\n✅ Eksekusi selesai!")</textarea>
                 </div>
                 <button id="copyOutputBtn" class="copy-btn"><i class="far fa-copy"></i> Salin</button>
             </div>
-            <pre id="outputArea">// Klik RUN untuk menjalankan kode
-// Output akan muncul di sini</pre>
+            <pre id="outputArea">// Klik RUN untuk menjalankan kode</pre>
             <div class="status" id="statusMsg">
                 <i class="fas fa-circle-info"></i> Siap menjalankan kode...
             </div>
         </div>
     </div>
     <div class="footer">
-        <i class="fas fa-shield-alt"></i> Bahasa Pemrograman : Python • JavaScript • C • C++ • C# • Java • PHP • Ruby • Go • Rust • Swift • Kotlin • Scala • Perl • R
+        <i class="fas fa-shield-alt"></i> Jay Arnold Lingga • Python • JavaScript • C • C++ • C# • Java • PHP • Ruby • Go • Rust • Swift • Kotlin • Scala • Perl • R
     </div>
 </div>
 
 <script>
-    // ============================================================
-    // FRONTEND - Mengirim request ke BACKEND PROXY (localhost:3000)
-    // ============================================================
+    const BACKEND_URL = "http://localhost:3000/api/run";
     
-    const BACKEND_URL = "https://binariapp.onrender.com/run";
-    
-    // Mapping bahasa UI -> OneCompiler language id
-    const languageMapping = {
-        python3: "python",
-        python2: "python2",
-        nodejs: "nodejs",
-        javascript: "javascript",
-        c: "c",
-        cpp: "cpp",
-        csharp: "csharp",
-        java: "java",
-        php: "php",
-        ruby: "ruby",
-        go: "go",
-        rust: "rust",
-        swift: "swift",
-        kotlin: "kotlin",
-        scala: "scala",
-        perl: "perl",
-        r: "r"
-    };
-    
-    function getFileName(language) {
-        const map = {
-            python3: "main.py",
-            python2: "main.py",
-            nodejs: "main.js",
-            javascript: "main.js",
-            c: "main.c",
-            cpp: "main.cpp",
-            csharp: "main.cs",
-            java: "Main.java",
-            php: "main.php",
-            ruby: "main.rb",
-            go: "main.go",
-            rust: "main.rs",
-            swift: "main.swift",
-            kotlin: "main.kt",
-            scala: "main.scala",
-            perl: "main.pl",
-            r: "main.r"
-        };
-        return map[language] || "code.txt";
-    }
-    
-const defaultCodes = {
-        python3: `# Python 3 - Binari Code Studio
-print("✨ Selamat datang di NexCode!")
+    // Template default untuk setiap bahasa (disesuaikan dengan OneCompiler)
+    const defaultCodes = {
+        python3: `import sys
+
+print("✨ Selamat datang di Binari Code Studio!")
 print("📊 Menghitung jumlah bilangan")
 
-# Mengambil input jika ada
-try:
-    nama = input("Masukkan nama Anda: ")
+print("Masukkan nama Anda: ", end="")
+nama = sys.stdin.readline().strip()
+if nama:
     print(f"Halo, {nama}!")
-except EOFError:
-    print("(Input tidak diberikan, lanjutkan...)")
+else:
+    print("(Tidak ada input yang diberikan)")
 
-# Perhitungan
 angka = [1, 2, 3, 4, 5]
 total = sum(angka)
 print(f"Jumlah 1+2+3+4+5 = {total}")
 
-# Loop
 print("\\nMenampilkan bilangan genap:")
 for i in range(1, 11):
     if i % 2 == 0:
         print(f"  {i} adalah genap")`,
-        python2: `# Python 2 - Binari Code Studio
-print "✨ Selamat datang di NexCode!"
+        
+        python2: `import sys
+
+print "✨ Selamat datang di Binari Code Studio!"
 print "📊 Menghitung jumlah bilangan"
 
-# Mengambil input jika ada
-try:
-    nama = raw_input("Masukkan nama Anda: ")
+print "Masukkan nama Anda: ",
+nama = sys.stdin.readline().strip()
+if nama:
     print "Halo, {}!".format(nama)
-except EOFError:
-    print "(Input tidak diberikan, lanjutkan...)"
+else:
+    print "(Tidak ada input yang diberikan)"
 
-# Perhitungan
 angka = [1, 2, 3, 4, 5]
 total = sum(angka)
 print "Jumlah 1+2+3+4+5 = {}".format(total)
 
-# Loop
 print "\\nMenampilkan bilangan genap:"
 for i in range(1, 11):
     if i % 2 == 0:
         print "  {} adalah genap".format(i)`,
-        nodejs: `// Node.js (JavaScript) - Binari Code Studio
+        
+        nodejs: `// Node.js - Binari Code Studio
 console.log("🚀 JavaScript dengan Jay Arnold Lingga");
 
-// Membaca input jika ada
 const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
@@ -556,6 +506,7 @@ setTimeout(() => {
     console.log("\\n✅ Eksekusi selesai!");
     if (!inputReceived) rl.close();
 }, 100);`,
+        
         javascript: `// JavaScript (Rhino) - Binari Code Studio
 print("🚀 JavaScript dengan Jay Arnold Lingga");
 
@@ -573,6 +524,7 @@ for(var i = 0; i < angka.length; i++) {
 }
 
 print("\\n✅ Eksekusi selesai!");`,
+        
         c: `#include <stdio.h>
 #include <string.h>
 
@@ -600,9 +552,9 @@ int main() {
     for(int i = 1; i <= 3; i++) {
         printf("  Iterasi ke-%d\\n", i);
     }
-    
     return 0;
 }`,
+        
         cpp: `#include <iostream>
 #include <string>
 using namespace std;
@@ -630,9 +582,9 @@ int main() {
     for(int i = 1; i <= 3; i++) {
         cout << "  Perulangan ke-" << i << endl;
     }
-    
     return 0;
 }`,
+        
         csharp: `using System;
 using System.Linq;
 
@@ -659,6 +611,7 @@ class Program {
         }
     }
 }`,
+        
         java: `import java.util.Scanner;
 
 public class Main {
@@ -690,12 +643,11 @@ public class Main {
         for(int i = 1; i <= 3; i++) {
             System.out.println("  Iterasi ke-" + i);
         }
-        
         scanner.close();
     }
 }`,
+        
         php: `<?php
-// PHP - Binari Code Studio
 echo "🐘 PHP - Binari Code Studio\\n";
 echo "Halo, PHP Developer!\\n";
 
@@ -720,8 +672,8 @@ foreach($angka as $index => $nilai) {
 echo "\\n✅ Eksekusi selesai!\\n";
 fclose($input);
 ?>`,
-        ruby: `# Ruby - Binari Code Studio
-puts "💎 Ruby - Binari Code Studio"
+        
+        ruby: `puts "💎 Ruby - Binari Code Studio"
 puts "Halo, Ruby Developer!"
 
 print "Masukkan nama: "
@@ -742,6 +694,7 @@ angka.each_with_index do |nilai, index|
 end
 
 puts "\n✅ Eksekusi selesai!"`,
+        
         go: `package main
 
 import (
@@ -780,8 +733,8 @@ func main() {
     
     fmt.Println("\\n✅ Eksekusi selesai!")
 }`,
-        rust: `// Rust - Binari Code Studio
-use std::io;
+        
+        rust: `use std::io;
 
 fn main() {
     println!("🦀 Rust - Binari Code Studio");
@@ -808,351 +761,9 @@ fn main() {
     }
     
     println!("\n✅ Eksekusi selesai!");
-}`,
-        swift: `// Swift - Binari Code Studio
-import Foundation
-
-print("🐦 Swift - Binari Code Studio")
-print("Halo, Swift Developer!")
-
-// Membaca input dari pengguna
-print("Masukkan nama: ", terminator: "")
-if let nama = readLine() {
-    if !nama.isEmpty {
-        print("Halo, \\(nama)!")
-    } else {
-        print("(Tidak ada input yang diberikan)")
-    }
-} else {
-    print("(Tidak ada input yang diberikan)")
-}
-
-// Array dan perhitungan
-let angka = [10, 20, 30, 40, 50]
-let total = angka.reduce(0, +)
-print("\\n📊 Total array: \\(total)")
-
-// Menampilkan data dengan loop
-print("\\n🔄 Menampilkan data:")
-for (index, nilai) in angka.enumerated() {
-    print("  Index \\(index): \\(nilai)")
-}
-
-// Contoh fungsi sederhana
-func hitungRataRata(_ numbers: [Int]) -> Double {
-    guard !numbers.isEmpty else { return 0 }
-    return Double(numbers.reduce(0, +)) / Double(numbers.count)
-}
-
-let rataRata = hitungRataRata(angka)
-print("\\n📈 Rata-rata: \\(String(format: "%.2f", rataRata))")
-
-// Perulangan dengan rentang
-print("\\n🔄 Perulangan 1 sampai 5:")
-for i in 1...5 {
-    print("  Angka ke-\\(i)")
-}
-
-print("\\n✅ Eksekusi selesai!")`,
-        kotlin: `// Kotlin - Binari Code Studio
-import kotlin.math.*
-
-fun main() {
-    println("📱 Kotlin - Binari Code Studio")
-    println("Halo, Kotlin Developer!")
-    
-    // Membaca input dari pengguna
-    print("Masukkan nama: ")
-    val nama = readLine()
-    
-    if (!nama.isNullOrEmpty()) {
-        println("Halo, $nama!")
-    } else {
-        println("(Tidak ada input yang diberikan)")
-    }
-    
-    // Array dan operasi
-    val angka = listOf(10, 20, 30, 40, 50)
-    val total = angka.sum()
-    println("\\n📊 Total array: $total")
-    
-    // Menampilkan data dengan loop
-    println("\\n🔄 Menampilkan data:")
-    angka.forEachIndexed { index, nilai ->
-        println("  Index $index: $nilai")
-    }
-    
-    // Contoh fungsi extension
-    fun List<Int>.rataRata(): Double {
-        return if (this.isEmpty()) 0.0 else this.sum().toDouble() / this.size
-    }
-    
-    val rataRata = angka.rataRata()
-    println("\\n📈 Rata-rata: String.format("%.2f", rataRata)")
-    
-    // Range dan perulangan
-    println("\\n🔄 Perulangan dengan range:")
-    for (i in 1..5) {
-        println("  Angka ke-$i")
-    }
-    
-    // Contoh when expression
-    val nilai = 85
-    val grade = when {
-        nilai >= 90 -> "A"
-        nilai >= 80 -> "B"
-        nilai >= 70 -> "C"
-        nilai >= 60 -> "D"
-        else -> "E"
-    }
-    println("\\n🎓 Nilai $nilai mendapatkan grade $grade")
-    
-    // List operations
-    val angkaGenap = angka.filter { it % 2 == 0 }
-    println("\\n🔢 Angka genap: $angkaGenap")
-    
-    println("\\n✅ Eksekusi selesai!")
-}`,
-        scala: `// Scala - Binari Code Studio
-import scala.io.StdIn
-
-object Main {
-    def main(args: Array[String]): Unit = {
-        println("🔥 Scala - Binari Code Studio")
-        println("Halo, Scala Developer!")
-        
-        // Membaca input dari pengguna
-        print("Masukkan nama: ")
-        val nama = StdIn.readLine()
-        
-        if (nama.nonEmpty) {
-            println(s"Halo, $nama!")
-        } else {
-            println("(Tidak ada input yang diberikan)")
-        }
-        
-        // Array dan operasi
-        val angka = List(10, 20, 30, 40, 50)
-        val total = angka.sum
-        println(s"\\n📊 Total array: $total")
-        
-        // Menampilkan data dengan loop
-        println("\\n🔄 Menampilkan data:")
-        angka.zipWithIndex.foreach { case (nilai, index) =>
-            println(f"  Index $index%d: $nilai%d")
-        }
-        
-        // Contoh fungsi higher-order
-        def hitungRataRata(numbers: List[Int]): Double = {
-            if (numbers.isEmpty) 0.0 else numbers.sum.toDouble / numbers.length
-        }
-        
-        val rataRata = hitungRataRata(angka)
-        println(f"\\n📈 Rata-rata: $rataRata%.2f")
-        
-        // Pattern matching
-        val nilai = 85
-        val grade = nilai match {
-            case x if x >= 90 => "A"
-            case x if x >= 80 => "B"
-            case x if x >= 70 => "C"
-            case x if x >= 60 => "D"
-            case _ => "E"
-        }
-        println(s"\\n🎓 Nilai $nilai mendapatkan grade $grade")
-        
-        // For comprehension
-        println("\\n🔄 Perulangan dengan for comprehension:")
-        val kuadrat = for (i <- 1 to 5) yield i * i
-        kuadrat.foreach(x => println(f"  Kuadrat: $x%d"))
-        
-        // List transformation
-        val angkaGenap = angka.filter(_ % 2 == 0)
-        println(s"\\n🔢 Angka genap: $angkaGenap")
-        
-        // Recursive function example
-        def faktorial(n: Int): Int = {
-            if (n <= 1) 1 else n * faktorial(n - 1)
-        }
-        
-        println(s"\\n🧮 Faktorial dari 5 adalah ${faktorial(5)}")
-        
-        println("\\n✅ Eksekusi selesai!")
-    }
-}`,
-        perl: `# Perl - Binari Code Studio
-use strict;
-use warnings;
-use 5.010;
-
-print "🐪 Perl - Binari Code Studio\\n";
-print "Halo, Perl Developer!\\n";
-
-# Membaca input dari pengguna
-print "Masukkan nama: ";
-chomp(my $nama = <STDIN>);
-
-if ($nama) {
-    print "Halo, $nama!\\n";
-} else {
-    print "(Tidak ada input yang diberikan)\\n";
-}
-
-# Array dan perhitungan
-my @angka = (10, 20, 30, 40, 50);
-my $total = 0;
-$total += $_ for @angka;
-print "\\n📊 Total array: $total\\n";
-
-# Menampilkan data dengan loop
-print "\\n🔄 Menampilkan data:\\n";
-for my $i (0 .. $#angka) {
-    printf "  Index %d: %d\\n", $i, $angka[$i];
-}
-
-# Contoh fungsi
-sub hitung_rata_rata {
-    my @numbers = @_;
-    return 0 unless @numbers;
-    my $sum = 0;
-    $sum += $_ for @numbers;
-    return $sum / @numbers;
-}
-
-my $rata_rata = hitung_rata_rata(@angka);
-printf "\\n📈 Rata-rata: %.2f\\n", $rata_rata;
-
-# Hash (asosiatif array)
-my %mahasiswa = (
-    "Alice" => 85,
-    "Bob" => 92,
-    "Charlie" => 78
-);
-
-print "\\n📚 Nilai mahasiswa:\\n";
-while (my ($nama_mhs, $nilai_mhs) = each %mahasiswa) {
-    print "  $nama_mhs: $nilai_mhs\\n";
-}
-
-# Perulangan dengan range
-print "\\n🔄 Perulangan 1 sampai 5:\\n";
-for my $i (1..5) {
-    print "  Angka ke-$i\\n";
-}
-
-# Conditional statement
-my $nilai = 85;
-my $grade;
-if ($nilai >= 90) {
-    $grade = "A";
-} elsif ($nilai >= 80) {
-    $grade = "B";
-} elsif ($nilai >= 70) {
-    $grade = "C";
-} elsif ($nilai >= 60) {
-    $grade = "D";
-} else {
-    $grade = "E";
-}
-print "\\n🎓 Nilai $nilai mendapatkan grade $grade\\n";
-
-# Filter array
-my @angka_genap = grep { $_ % 2 == 0 } @angka;
-print "\\n🔢 Angka genap: @angka_genap\\n";
-
-# Regular expression example
-my $teks = "Perl is awesome for text processing!";
-if ($teks =~ /awesome/) {
-    print "\\n✨ Teks mengandung kata 'awesome'\\n";
-}
-
-print "\\n✅ Eksekusi selesai!\\n";`,
-        r: `# R - Binari Code Studio
-cat("📊 R - Binari Code Studio\\n")
-cat("Halo, R Developer!\\n\\n")
-
-# Membaca input dari pengguna
-cat("Masukkan nama: ")
-nama <- readLines("stdin", n = 1)
-if (nchar(nama) > 0) {
-    cat(paste("Halo,", nama, "!\\n"))
-} else {
-    cat("(Tidak ada input yang diberikan)\\n")
-}
-
-# Vector dan perhitungan
-angka <- c(10, 20, 30, 40, 50)
-total <- sum(angka)
-cat(paste("\\n📊 Total array:", total, "\\n"))
-
-# Menampilkan data dengan loop
-cat("\\n🔄 Menampilkan data:\\n")
-for (i in 1:length(angka)) {
-    cat(paste("  Index", i-1, ":", angka[i], "\\n"))
-}
-
-# Contoh fungsi
-hitung_rata_rata <- function(numbers) {
-    if (length(numbers) == 0) return(0)
-    return(mean(numbers))
-}
-
-rata_rata <- hitung_rata_rata(angka)
-cat(paste("\\n📈 Rata-rata:", sprintf("%.2f", rata_rata), "\\n"))
-
-# Data frame
-mahasiswa <- data.frame(
-    Nama = c("Alice", "Bob", "Charlie"),
-    Nilai = c(85, 92, 78)
-)
-
-cat("\\n📚 Data mahasiswa:\\n")
-print(mahasiswa)
-
-# Perulangan dengan sequence
-cat("\\n🔄 Perulangan 1 sampai 5:\\n")
-for (i in 1:5) {
-    cat(paste("  Angka ke-", i, "\\n", sep=""))
-}
-
-# Conditional statement
-nilai <- 85
-grade <- if (nilai >= 90) {
-    "A"
-} else if (nilai >= 80) {
-    "B"
-} else if (nilai >= 70) {
-    "C"
-} else if (nilai >= 60) {
-    "D"
-} else {
-    "E"
-}
-cat(paste("\\n🎓 Nilai", nilai, "mendapatkan grade", grade, "\\n"))
-
-# Filter vector
-angka_genap <- angka[angka %% 2 == 0]
-cat(paste("\\n🔢 Angka genap:", paste(angka_genap, collapse=", "), "\\n"))
-
-# List operations
-kuadrat <- sapply(1:5, function(x) x^2)
-cat("\\n📐 Kuadrat dari 1-5:", paste(kuadrat, collapse=", "), "\\n")
-
-# Statistical summary
-cat("\\n📊 Ringkasan statistik:\\n")
-print(summary(angka))
-
-# Plot example (basic)
-cat("\\n📈 Membuat plot sederhana...\\n")
-x <- 1:10
-y <- x^2
-# Note: Plot akan muncul jika environment mendukung
-plot(x, y, type="b", col="blue", main="Grafik Fungsi Kuadrat", 
-     xlab="X", ylab="Y", pch=16)
-cat("Plot telah dibuat!\\n")
-
-cat("\\n✅ Eksekusi selesai!\\n")`
+}`
     };
+    
     // DOM Elements
     const languageSelect = document.getElementById('languageSelect');
     const codeEditor = document.getElementById('codeEditor');
@@ -1164,14 +775,29 @@ cat("\\n✅ Eksekusi selesai!\\n")`
     const langIndicator = document.getElementById('langIndicator');
     const copyOutputBtn = document.getElementById('copyOutputBtn');
     const stdinInput = document.getElementById('stdinInput');
-    const creditInfo = document.getElementById('creditInfo');
-    const versionSelector = document.getElementById('versionSelector');
-    if(versionSelector) versionSelector.style.display = 'none';
     
-    function updateLanguage() {
-        const lang = languageSelect.value;
+    // Versions (tidak dipakai)
+    const languageVersions = {
+        python3: ["3"], python2: ["2"], nodejs: ["18"], java: ["17"], cpp: ["17"], c: ["17"], csharp: ["6.0"], php: ["8"], ruby: ["3"], go: ["1"], rust: ["1"], swift: ["5"], kotlin: ["1"], scala: ["3"], perl: ["5"], r: ["4"]
+    };
+    
+    function updateVersionSelector(language) {
+        const versions = languageVersions[language];
+        const versionSelector = document.getElementById('versionSelector');
+        const versionSelect = document.getElementById('versionSelect');
+        if (versions && versions.length > 0) {
+            versionSelector.style.display = "flex";
+            versionSelect.innerHTML = versions.map(v => `<option value="${v}">v${v}</option>`).join('');
+        } else {
+            versionSelector.style.display = "none";
+        }
+    }
+    
+    languageSelect.addEventListener('change', (e) => {
+        const lang = e.target.value;
         const selectedText = languageSelect.options[languageSelect.selectedIndex].text;
         langIndicator.innerText = selectedText.split(' ')[0];
+        updateVersionSelector(lang);
         if (defaultCodes[lang]) {
             codeEditor.value = defaultCodes[lang];
         } else {
@@ -1182,9 +808,7 @@ cat("\\n✅ Eksekusi selesai!\\n")`
             if(statusMsg.innerHTML.includes("Template")) 
                 statusMsg.innerHTML = `<i class="fas fa-circle-info"></i> Siap menjalankan kode...`;
         }, 2000);
-    }
-    
-    languageSelect.addEventListener('change', updateLanguage);
+    });
     
     clearBtn.addEventListener('click', () => {
         codeEditor.value = '';
@@ -1225,30 +849,42 @@ cat("\\n✅ Eksekusi selesai!\\n")`
     });
     
     async function executeCode() {
-        const langUI = languageSelect.value;
-        const language = languageMapping[langUI];
-        if (!language) {
-            outputArea.innerText = "❌ Error: Bahasa tidak didukung";
-            statusMsg.innerHTML = `<i class="fas fa-exclamation-circle"></i> Bahasa tidak valid`;
-            return;
-        }
-        
+        const language = languageSelect.value;
         const code = codeEditor.value;
-        const stdinValue = stdinInput.value;
+        const stdin = stdinInput.value || "";
+        
         if (!code.trim()) {
             outputArea.innerText = "❌ Error: Kode tidak boleh kosong!";
             statusMsg.innerHTML = `<i class="fas fa-exclamation-circle"></i> Kode kosong!`;
             return;
         }
         
-        outputArea.innerText = "⏳ sedang diproses...\nMohon ditunggu, yee...";
-        statusMsg.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Mengeksekusi ${langUI.toUpperCase()}...`;
+        outputArea.innerText = "⏳ Mengirim kode ke server...\nMohon tunggu...";
+        statusMsg.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Mengeksekusi kode ${language}...`;
         
-        const fileName = getFileName(langUI);
+        // Tentukan nama file berdasarkan bahasa
+        let filename = "code.txt";
+        if (language === 'python3' || language === 'python2') filename = "main.py";
+        else if (language === 'nodejs') filename = "main.js";
+        else if (language === 'javascript') filename = "script.js";
+        else if (language === 'c') filename = "main.c";
+        else if (language === 'cpp') filename = "main.cpp";
+        else if (language === 'csharp') filename = "Main.cs";
+        else if (language === 'java') filename = "Main.java";
+        else if (language === 'php') filename = "main.php";
+        else if (language === 'ruby') filename = "main.rb";
+        else if (language === 'go') filename = "main.go";
+        else if (language === 'rust') filename = "main.rs";
+        else if (language === 'swift') filename = "main.swift";
+        else if (language === 'kotlin') filename = "main.kt";
+        else if (language === 'scala') filename = "main.scala";
+        else if (language === 'perl') filename = "main.pl";
+        else if (language === 'r') filename = "main.r";
+        
         const payload = {
-            language: language,
-            stdin: stdinValue,
-            files: [{ name: fileName, content: code }]
+            language: language, // akan di-map di backend
+            stdin: stdin,
+            files: [{ name: filename, content: code }]
         };
         
         try {
@@ -1264,40 +900,45 @@ cat("\\n✅ Eksekusi selesai!\\n")`
             
             const data = await response.json();
             
-            if (data.status === "failed" || data.error) {
-                let errMsg = data.error || "Unknown error";
-                outputArea.innerText = `❌ API Error: ${errMsg}`;
-                statusMsg.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Gagal: ${errMsg.substring(0, 70)}`;
-                if (data.limitRemaining !== undefined) creditInfo.innerText = `Limit: ${data.limitRemaining} calls left`;
-                return;
-            }
-            
+            // Proses respons berdasarkan dokumentasi OneCompiler
             let output = "";
-            if (data.stdout) output += data.stdout;
-            if (data.stderr) {
-                if (output) output += "\n";
-                output += `[stderr]:\n${data.stderr}`;
-            }
-            if (data.exception) {
-                if (output) output += "\n";
-                output += `[Exception]: ${data.exception}`;
-            }
-            if (!output.trim()) output = "✅ Program selesai tanpa output.";
+            let hasError = false;
             
-            if (data.executionTime !== undefined) output += `\n\n⏱️ Execution Time: ${data.executionTime} ms`;
-            if (data.memoryUsed !== undefined) output += `\n💾 Memory Used: ${data.memoryUsed} KB`;
-            
-            if (data.limitRemaining !== undefined) creditInfo.innerText = `Limit: ${data.limitRemaining} calls left`;
-            else creditInfo.innerText = `Success`;
+            if (data.error) {
+                // API error (E001, E002, dll)
+                output = `❌ API Error: ${data.error}`;
+                hasError = true;
+            } else {
+                // Eksekusi berhasil (status bisa "success" meskipun program error)
+                if (data.stdout) output += data.stdout;
+                if (data.stderr) {
+                    if (output) output += "\n";
+                    output += `❌ STDERR:\n${data.stderr}`;
+                    hasError = true;
+                }
+                if (data.exception) {
+                    if (output) output += "\n";
+                    output += `❌ Exception:\n${data.exception}`;
+                    hasError = true;
+                }
+                if (!data.stdout && !data.stderr && !data.exception) {
+                    output = "⚠️ Program selesai tanpa output (stdout kosong).";
+                }
+            }
             
             outputArea.innerText = output;
-            statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Eksekusi selesai ${data.executionTime ? `(${data.executionTime}ms)` : ''}`;
-        } catch (err) {
-            console.error(err);
-            let errMsg = err.message;
-            if (err.name === "AbortError") errMsg = "Timeout: backend tidak merespon dalam 35 detik";
-            outputArea.innerText = `❌ Gagal mengeksekusi kode:\n${errMsg}\n\nPastikan backend sudah berjalan di http://localhost:3000\nJalankan: node server.js`;
-            statusMsg.innerHTML = `<i class="fas fa-bug"></i> Error: ${errMsg.substring(0, 80)}`;
+            if (hasError) {
+                statusMsg.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Eksekusi dengan error`;
+            } else {
+                statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Eksekusi selesai`;
+            }
+            
+        } catch (error) {
+            console.error(error);
+            let errorMsg = error.message;
+            if (error.name === "AbortError") errorMsg = "Timeout: Server tidak merespon dalam 35 detik";
+            outputArea.innerText = `❌ Gagal mengeksekusi kode:\n${errorMsg}\n\nPastikan backend server.js berjalan di http://localhost:3000`;
+            statusMsg.innerHTML = `<i class="fas fa-bug"></i> Error: ${errorMsg.substring(0, 80)}`;
         }
     }
     
@@ -1313,57 +954,11 @@ cat("\\n✅ Eksekusi selesai!\\n")`
         }
     });
     
-    stdinInput.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key === 'Enter') {
-            e.preventDefault();
-            executeCode();
-        }
-    });
-    
-    // ============================================================
-    // TAMBAHAN: Auto-indentation untuk Python (tanpa mengubah kode asli)
-    // ============================================================
-    codeEditor.addEventListener('keydown', function(e) {
-        // Hanya aktif untuk Python 3 atau Python 2, dan bukan Ctrl+Enter (biarkan untuk run)
-        const lang = languageSelect.value;
-        if ((lang === 'python3' || lang === 'python2') && e.key === 'Enter' && !e.ctrlKey && !e.metaKey) {
-            e.preventDefault();
-            const textarea = codeEditor;
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const value = textarea.value;
-            
-            // Cari awal baris tempat kursor berada
-            let lineStart = value.lastIndexOf('\n', start - 1) + 1;
-            let currentLine = value.substring(lineStart, start);
-            
-            // Ambil indentasi baris saat ini (spasi/tab di awal)
-            let indentMatch = currentLine.match(/^[ \t]*/);
-            let currentIndent = indentMatch ? indentMatch[0] : '';
-            
-            // Cek apakah baris diakhiri dengan ':' (abaikan spasi di akhir)
-            let trimmedLine = currentLine.trimEnd();
-            let needsExtraIndent = trimmedLine.endsWith(':');
-            
-            // Tentukan indentasi untuk baris baru
-            let newIndent = currentIndent;
-            if (needsExtraIndent) {
-                newIndent += '    '; // 4 spasi (standar Python)
-            }
-            
-            // Sisipkan newline + indentasi
-            const newText = value.substring(0, start) + '\n' + newIndent + value.substring(end);
-            textarea.value = newText;
-            
-            // Letakkan kursor setelah indentasi
-            textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length;
-        }
-    });
-    
     // Inisialisasi
     codeEditor.value = defaultCodes.python3;
     langIndicator.innerText = "Python 3";
-    statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Binari Code Studio | Instagram : @jay_lingga.dev, @creovizion`;
+    updateVersionSelector("python3");
+    statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Binari Code Studio siap | Ctrl+Enter untuk run`;
 </script>
 </body>
 </html>
