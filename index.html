@@ -477,6 +477,7 @@ print("\n✅ Eksekusi selesai!")</textarea>
         return map[language] || "code.txt";
     }
     
+  
     const defaultCodes = {
         python3: `# Python 3 - Binari Code Studio
 print("✨ Selamat datang di NexCode!")
@@ -780,7 +781,7 @@ func main() {
     
     fmt.Println("\\n✅ Eksekusi selesai!")
 }`,
-    rust: `// Rust - Binari Code Studio
+        rust: `// Rust - Binari Code Studio
 use std::io;
 
 fn main() {
@@ -789,209 +790,26 @@ fn main() {
     
     let mut input = String::new();
     println!("Masukkan nama: ");
-
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Gagal membaca input");
-
-    let input = input.trim();
-
-    if !input.is_empty() {
-        println!("Halo, {}!", input);
+    io::stdin().read_line(&mut input).ok();
+    let nama = input.trim();
+    
+    if !nama.is_empty() {
+        println!("Halo, {}!", nama);
     } else {
         println!("(Tidak ada input yang diberikan)");
     }
-
-    let angka = [10, 20, 30, 40];
+    
+    let angka = vec![10, 20, 30, 40, 50];
     let total: i32 = angka.iter().sum();
-
-    println!("\\n📊 Total array: {}", total);
-
-    println!("\\n🔄 Menampilkan data:");
-    for (i, val) in angka.iter().enumerate() {
-        println!("  Index {}: {}", i, val);
-    }
-}`,
-
-    swift: `// Swift - Binari Code Studio
-import Foundation
-
-func greet(name: String) -> String {
-    return "Hello, \\(name)! Welcome to Swift."
-}
-
-func main() {
-    let name = "Sapri (saya pribadi)"
-    let age = 20
+    println!("\n📊 Total array: {}", total);
     
-    print("Program Swift dimulai...")
+    println!("\n🔄 Menampilkan data:");
+    for (i, &nilai) in angka.iter().enumerate() {
+        println!("  Index {}: {}", i, nilai);
+    }
     
-    let message = greet(name: name)
-    print(message)
-    
-    if age >= 18 {
-        print("\\(name) sudah dewasa.")
-    } else {
-        print("\\(name) masih di bawah umur.")
-    }
-}
-
-main()`,
-
-    kotlin: `// Kotlin - Binari Code Studio
-fun greet(name: String): String {
-    return "Hello, $name! Welcome to Kotlin."
-}
-
-fun main() {
-    val name = "Sapri (saya pribadi)"
-    val age = 20
-    
-    println("Program Kotlin dimulai...")
-    
-    val message = greet(name)
-    println(message)
-    
-    if (age >= 18) {
-        println("$name sudah dewasa.")
-    } else {
-        println("$name masih di bawah umur.")
-    }
-}`,
-
-    scala: `// Scala - Binari Code Studio
-import scala.io.StdIn
-
-object Main {
-
-  def greet(name: String): String = {
-    s"Halo, $name! Selamat datang di Scala 🚀"
-  }
-
-  def hitungTotal(data: Array[Int]): Int = {
-    var total = 0
-    for (nilai <- data) {
-      total += nilai
-    }
-    total
-  }
-
-  def tampilkanData(data: Array[Int]): Unit = {
-    println("\n🔄 Menampilkan data:")
-    for ((nilai, index) <- data.zipWithIndex) {
-      println(s"  Index $index: $nilai")
-    }
-  }
-
-  def main(args: Array[String]): Unit = {
-    println("⚙️ Scala - Binari Code Studio")
-    println("Program dimulai...\n")
-
-    print("Masukkan nama: ")
-    val nama = StdIn.readLine()
-
-    if (nama != null && nama.nonEmpty) {
-      println(greet(nama))
-    } else {
-      println("(Tidak ada input yang diberikan)")
-    }
-
-    val angka = Array(5, 10, 15, 20, 25)
-
-    val total = hitungTotal(angka)
-    println(s"\n📊 Total array: $total")
-
-    tampilkanData(angka)
-
-    println("\n🔁 Menampilkan bilangan genap dari 1-10:")
-    for (i <- 1 to 10 if i % 2 == 0) {
-      println(s"  $i adalah genap")
-    }
-
-    println("\n✅ Eksekusi selesai!")
-  }
-}`,
-
-    r: `# R - Binari Code Studio
-greet <- function(name) {
-  paste("Hello,", name, "! Welcome to R.")
-}
-
-main <- function() {
-  name <- "Sapri (saya pribadi)"
-  age <- 20
-  
-  print("Program R dimulai...")
-  
-  message <- greet(name)
-  print(message)
-  
-  if (age >= 18) {
-    print(paste(name, "sudah dewasa."))
-  } else {
-    print(paste(name, "masih di bawah umur."))
-  }
-}
-
-main()`,
-        
-        pearl`
-
-        # Perl - Binari Code Studio
-use strict;
-use warnings;
-
-sub greet {
-    my ($name) = @_;
-    return "Halo, $name! Selamat datang di Perl 🐪";
-}
-
-sub hitung_total {
-    my (@data) = @_;
-    my $total = 0;
-    foreach my $nilai (@data) {
-        $total += $nilai;
-    }
-    return $total;
-}
-
-sub tampilkan_data {
-    my (@data) = @_;
-    print "\n🔄 Menampilkan data:\n";
-    for (my $i = 0; $i < @data; $i++) {
-        print "  Index $i: $data[$i]\n";
-    }
-}
-
-print "🐪 Perl - Binari Code Studio\n";
-print "Program dimulai...\n\n";
-
-print "Masukkan nama: ";
-my $nama = <STDIN>;
-chomp($nama);
-
-if ($nama ne "") {
-    print greet($nama) . "\n";
-} else {
-    print "(Tidak ada input yang diberikan)\n";
-}
-
-my @angka = (5, 10, 15, 20, 25);
-
-my $total = hitung_total(@angka);
-print "\n📊 Total array: $total\n";
-
-tampilkan_data(@angka);
-
-print "\n🔁 Menampilkan bilangan genap dari 1-10:\n";
-for (my $i = 1; $i <= 10; $i++) {
-    if ($i % 2 == 0) {
-        print "  $i adalah genap\n";
-    }
-}
-
-print "\n✅ Eksekusi selesai!\n";
-`
+    println!("\n✅ Eksekusi selesai!");
+}`
     };
     
     // DOM Elements
