@@ -821,7 +821,7 @@ func greet(name: String) -> String {
 }
 
 func main() {
-    let name = "Jay"
+    let name = "Sapri (saya pribadi)"
     let age = 20
     
     print("Program Swift dimulai...")
@@ -844,7 +844,7 @@ fun greet(name: String): String {
 }
 
 fun main() {
-    val name = "Jay"
+    val name = "Sapri (saya pribadi)"
     val age = 20
     
     println("Program Kotlin dimulai...")
@@ -860,25 +860,55 @@ fun main() {
 }`,
 
     scala: `// Scala - Binari Code Studio
+import scala.io.StdIn
+
 object Main {
+
   def greet(name: String): String = {
-    s"Hello, $name! Welcome to Scala."
+    s"Halo, $name! Selamat datang di Scala 🚀"
+  }
+
+  def hitungTotal(data: Array[Int]): Int = {
+    var total = 0
+    for (nilai <- data) {
+      total += nilai
+    }
+    total
+  }
+
+  def tampilkanData(data: Array[Int]): Unit = {
+    println("\n🔄 Menampilkan data:")
+    for ((nilai, index) <- data.zipWithIndex) {
+      println(s"  Index $index: $nilai")
+    }
   }
 
   def main(args: Array[String]): Unit = {
-    val name = "Jay"
-    val age = 20
+    println("⚙️ Scala - Binari Code Studio")
+    println("Program dimulai...\n")
 
-    println("Program Scala dimulai...")
+    print("Masukkan nama: ")
+    val nama = StdIn.readLine()
 
-    val message = greet(name)
-    println(message)
-
-    if (age >= 18) {
-      println(s"$name sudah dewasa.")
+    if (nama != null && nama.nonEmpty) {
+      println(greet(nama))
     } else {
-      println(s"$name masih di bawah umur.")
+      println("(Tidak ada input yang diberikan)")
     }
+
+    val angka = Array(5, 10, 15, 20, 25)
+
+    val total = hitungTotal(angka)
+    println(s"\n📊 Total array: $total")
+
+    tampilkanData(angka)
+
+    println("\n🔁 Menampilkan bilangan genap dari 1-10:")
+    for (i <- 1 to 10 if i % 2 == 0) {
+      println(s"  $i adalah genap")
+    }
+
+    println("\n✅ Eksekusi selesai!")
   }
 }`,
 
@@ -888,7 +918,7 @@ greet <- function(name) {
 }
 
 main <- function() {
-  name <- "Jay"
+  name <- "Sapri (saya pribadi)"
   age <- 20
   
   print("Program R dimulai...")
@@ -903,7 +933,65 @@ main <- function() {
   }
 }
 
-main()`
+main()`,
+        
+        pearl`
+
+        # Perl - Binari Code Studio
+use strict;
+use warnings;
+
+sub greet {
+    my ($name) = @_;
+    return "Halo, $name! Selamat datang di Perl 🐪";
+}
+
+sub hitung_total {
+    my (@data) = @_;
+    my $total = 0;
+    foreach my $nilai (@data) {
+        $total += $nilai;
+    }
+    return $total;
+}
+
+sub tampilkan_data {
+    my (@data) = @_;
+    print "\n🔄 Menampilkan data:\n";
+    for (my $i = 0; $i < @data; $i++) {
+        print "  Index $i: $data[$i]\n";
+    }
+}
+
+print "🐪 Perl - Binari Code Studio\n";
+print "Program dimulai...\n\n";
+
+print "Masukkan nama: ";
+my $nama = <STDIN>;
+chomp($nama);
+
+if ($nama ne "") {
+    print greet($nama) . "\n";
+} else {
+    print "(Tidak ada input yang diberikan)\n";
+}
+
+my @angka = (5, 10, 15, 20, 25);
+
+my $total = hitung_total(@angka);
+print "\n📊 Total array: $total\n";
+
+tampilkan_data(@angka);
+
+print "\n🔁 Menampilkan bilangan genap dari 1-10:\n";
+for (my $i = 1; $i <= 10; $i++) {
+    if ($i % 2 == 0) {
+        print "  $i adalah genap\n";
+    }
+}
+
+print "\n✅ Eksekusi selesai!\n";
+`
     };
     
     // DOM Elements
