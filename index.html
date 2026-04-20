@@ -780,7 +780,7 @@ func main() {
     
     fmt.Println("\\n✅ Eksekusi selesai!")
 }`,
-        rust: `// Rust - Binari Code Studio
+    rust: `// Rust - Binari Code Studio
 use std::io;
 
 fn main() {
@@ -789,26 +789,121 @@ fn main() {
     
     let mut input = String::new();
     println!("Masukkan nama: ");
-    io::stdin().read_line(&mut input).ok();
-    let nama = input.trim();
-    
-    if !nama.is_empty() {
-        println!("Halo, {}!", nama);
+
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Gagal membaca input");
+
+    let input = input.trim();
+
+    if !input.is_empty() {
+        println!("Halo, {}!", input);
     } else {
         println!("(Tidak ada input yang diberikan)");
     }
-    
-    let angka = vec![10, 20, 30, 40, 50];
+
+    let angka = [10, 20, 30, 40];
     let total: i32 = angka.iter().sum();
-    println!("\n📊 Total array: {}", total);
-    
-    println!("\n🔄 Menampilkan data:");
-    for (i, &nilai) in angka.iter().enumerate() {
-        println!("  Index {}: {}", i, nilai);
+
+    println!("\\n📊 Total array: {}", total);
+
+    println!("\\n🔄 Menampilkan data:");
+    for (i, val) in angka.iter().enumerate() {
+        println!("  Index {}: {}", i, val);
     }
+}`,
+
+    swift: `// Swift - Binari Code Studio
+import Foundation
+
+func greet(name: String) -> String {
+    return "Hello, \\(name)! Welcome to Swift."
+}
+
+func main() {
+    let name = "Jay"
+    let age = 20
     
-    println!("\n✅ Eksekusi selesai!");
-}`
+    print("Program Swift dimulai...")
+    
+    let message = greet(name: name)
+    print(message)
+    
+    if age >= 18 {
+        print("\\(name) sudah dewasa.")
+    } else {
+        print("\\(name) masih di bawah umur.")
+    }
+}
+
+main()`,
+
+    kotlin: `// Kotlin - Binari Code Studio
+fun greet(name: String): String {
+    return "Hello, $name! Welcome to Kotlin."
+}
+
+fun main() {
+    val name = "Jay"
+    val age = 20
+    
+    println("Program Kotlin dimulai...")
+    
+    val message = greet(name)
+    println(message)
+    
+    if (age >= 18) {
+        println("$name sudah dewasa.")
+    } else {
+        println("$name masih di bawah umur.")
+    }
+}`,
+
+    scala: `// Scala - Binari Code Studio
+object Main {
+  def greet(name: String): String = {
+    s"Hello, $name! Welcome to Scala."
+  }
+
+  def main(args: Array[String]): Unit = {
+    val name = "Jay"
+    val age = 20
+
+    println("Program Scala dimulai...")
+
+    val message = greet(name)
+    println(message)
+
+    if (age >= 18) {
+      println(s"$name sudah dewasa.")
+    } else {
+      println(s"$name masih di bawah umur.")
+    }
+  }
+}`,
+
+    r: `# R - Binari Code Studio
+greet <- function(name) {
+  paste("Hello,", name, "! Welcome to R.")
+}
+
+main <- function() {
+  name <- "Jay"
+  age <- 20
+  
+  print("Program R dimulai...")
+  
+  message <- greet(name)
+  print(message)
+  
+  if (age >= 18) {
+    print(paste(name, "sudah dewasa."))
+  } else {
+    print(paste(name, "masih di bawah umur."))
+  }
+}
+
+main()`
     };
     
     // DOM Elements
