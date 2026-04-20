@@ -326,7 +326,7 @@
     <div class="api-key-section">
         <div class="api-status" id="apiStatus">
             <i class="fas fa-circle" style="color: #22c55e; font-size: 0.6rem;"></i>
-            <span style="color: #80c1e6;">Backend Proxy Active</span>
+            <span style="color: #80c1e6;">Status : Online</span>
         </div>
         <div class="api-status">
             <i class="fas fa-chart-line"></i>
@@ -899,7 +899,7 @@ fn main() {
             return;
         }
         
-        outputArea.innerText = "⏳ sedang diproses...\nmohon tunggu, yee...";
+        outputArea.innerText = "⏳ sedang diproses...\nMohon ditunggu, yee...";
         statusMsg.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Mengeksekusi ${langUI.toUpperCase()}...`;
         
         const fileName = getFileName(langUI);
