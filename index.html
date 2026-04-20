@@ -319,18 +319,18 @@
             <p>created by : @jay_lingga.dev</p>
         </div>
         <div class="badge">
-            <i class="fas fa-cloud-upload-alt"></i> OneCompiler • Real-time Execution • 15+ Languages
+            <i class="fas fa-cloud-upload-alt"></i> Compiler • Real-time Execution • 15+ Languages
         </div>
     </div>
 
     <div class="api-key-section">
         <div class="api-status" id="apiStatus">
             <i class="fas fa-circle" style="color: #22c55e; font-size: 0.6rem;"></i>
-            <span style="color: #80c1e6;">Backend Proxy Active</span>
+            <span style="color: #80c1e6;">Status : Online</span>
         </div>
         <div class="api-status">
             <i class="fas fa-chart-line"></i>
-            <span id="creditInfo">OneCompiler via Proxy</span>
+            <span id="creditInfo" style="color: white;">Ready!</span>
         </div>
     </div>
 
@@ -380,7 +380,7 @@
 # Selamat datang di compiler online!
 
 print("✨ Halo! Selamat datang di Binari Code Studio")
-print("🚀 Menggunakan Jay Arnold Lingga")
+print("🚀 by : Jay Arnold Lingga")
 
 # Contoh mengambil input
 try:
@@ -422,7 +422,7 @@ print("\n✅ Eksekusi selesai!")</textarea>
         </div>
     </div>
     <div class="footer">
-        <i class="fas fa-shield-alt"></i> Jay Arnold Lingga • Python • JavaScript • C • C++ • C# • Java • PHP • Ruby • Go • Rust • Swift • Kotlin • Scala • Perl • R
+        <i class="fas fa-shield-alt"></i> Bahasa Pemrograman : Python • JavaScript • C • C++ • C# • Java • PHP • Ruby • Go • Rust • Swift • Kotlin • Scala • Perl • R
     </div>
 </div>
 
@@ -899,7 +899,7 @@ fn main() {
             return;
         }
         
-        outputArea.innerText = "⏳ Mengirim ke backend proxy...\nMohon tunggu...";
+        outputArea.innerText = "⏳ sedang diproses...\nMohon ditunggu, yee...";
         statusMsg.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> Mengeksekusi ${langUI.toUpperCase()}...`;
         
         const fileName = getFileName(langUI);
@@ -946,7 +946,7 @@ fn main() {
             if (data.memoryUsed !== undefined) output += `\n💾 Memory Used: ${data.memoryUsed} KB`;
             
             if (data.limitRemaining !== undefined) creditInfo.innerText = `Limit: ${data.limitRemaining} calls left`;
-            else creditInfo.innerText = `OneCompiler via Proxy`;
+            else creditInfo.innerText = `Success`;
             
             outputArea.innerText = output;
             statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Eksekusi selesai ${data.executionTime ? `(${data.executionTime}ms)` : ''}`;
@@ -1021,8 +1021,7 @@ fn main() {
     // Inisialisasi
     codeEditor.value = defaultCodes.python3;
     langIndicator.innerText = "Python 3";
-    statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Binari Code Studio | Backend proxy di localhost:3000 | Ctrl+Enter untuk run | Auto-indent untuk Python (setelah ':')`;
-    creditInfo.innerText = `Backend : localhost:3000`;
+    statusMsg.innerHTML = `<i class="fas fa-check-circle"></i> Binari Code Studio | Instagram : @jay_lingga.dev, @creovizion`;
 </script>
 </body>
 </html>
